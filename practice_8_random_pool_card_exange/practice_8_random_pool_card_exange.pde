@@ -1,55 +1,72 @@
 //四种花色分别为黑桃♠（piques，又名葵扇）、紅心♥（cœurs，又名红桃）、梅花♣（trèfles，又名草花）、方块♦（carreaux，又名菱形、鑽石、紅磚、磚塊、階磚或方片，中國川渝地区称为"巴片"），黑桃和梅花為黑色，紅心和方块為红色。
 //https://www.youtube.com/watch?v=7C8ZCVtKMsk教學網站
 //https://zhuanlan.zhihu.com/p/259580884
+int peopleNumMax = 10;
+String[][][] people =new String [peopleNumMax][5][2];//[number][card][deck];
 String[] faces ={
-   "黑桃A","黑桃2","黑桃3","黑桃4","黑桃5","黑桃6","黑桃7","黑桃8","黑桃9","黑桃10","黑桃J","黑桃Q","黑桃K",
-   "紅心A","紅心2","紅心3","紅心4","紅心5","紅心6","紅心7","紅心8","紅心9","紅心10","紅心J","紅心Q","紅心K",
-   "方塊A","方塊2","方塊3","方塊4","方塊5","方塊6","方塊7","方塊8","方塊9","方塊10","方塊J","方塊Q","方塊K", 
-   "梅花A","梅花2","梅花3","梅花4","梅花5","梅花6","梅花7","梅花8","梅花9","梅花10","梅花J","梅花Q","梅花K",};  
+   "黑桃A","黑桃2","黑桃3","黑桃4","黑桃5","黑桃6","黑桃7","黑桃8","黑桃9","黑桃peopleNumMax","黑桃J","黑桃Q","黑桃K",
+   "紅心A","紅心2","紅心3","紅心4","紅心5","紅心6","紅心7","紅心8","紅心9","紅心peopleNumMax","紅心J","紅心Q","紅心K",
+   "方塊A","方塊2","方塊3","方塊4","方塊5","方塊6","方塊7","方塊8","方塊9","方塊peopleNumMax","方塊J","方塊Q","方塊K", 
+   "梅花A","梅花2","梅花3","梅花4","梅花5","梅花6","梅花7","梅花8","梅花9","梅花peopleNumMax","梅花J","梅花Q","梅花K",};  
 String [] object ={"金錢財富","慈善愛心","公平正直","別緻精彩"};//[]為陣列，黑桃：金錢財富,紅心：慈悲愛心,方塊：公平正義,梅花：別緻精彩，依序編為0,1,2,3號
 void setup(){ //void寫程式碼
   size(1300,700);//設定桌面大小
   background(#FAFCDB);//設定桌面背景顏色
   stroke(#DDF5A3);//筆觸顏色為淺綠色
-  PFont font= createFont("標楷體",30);//font：字體；建立一個字形的變數。(PFont是變數名稱)
+  print(PFont.list());
+  PFont font= createFont("PingFangTC-Light",30);//font：字體；建立一個字形的變數。(PFont是變數名稱)
   textFont(font);//套用字型；createFont("字體",大小);設定內建的一個字型。另一種讀字體檔的方法loadFont("字體檔案"); 
-  myShuffle();//洗牌英文shuffle
+  licensing();
 }
 
+void licensing(){
+  myShuffle();
+  String deck = "1";
+  int deckCard=0;
+  for(int number=0;number<peopleNumMax;number++){
+    for(int numberCard=0;numberCard<5;numberCard++){
+      deckCard++;
+      if(deckCard==52){
+        myShuffle();
+        deckCard=0;
+        deck+=1;
+      }     
+      people[number][numberCard][0]=faces[deckCard];
+      people[number][numberCard][1]= deck;
+    }
+  } 
+}
 void myShuffle(){ 
-  for(int k=0; k<10000; k++){
+  for(int i=0;i<1000;i++){
     int a = int(random(52));
     int b = int(random(52));
     //目標：faces[a] vs. faces[b];
     String temp = faces[a]; //牌面a倒入temp
     faces[a] = faces[b]; //牌面b倒入牌面a
     faces[b] = temp; //temp倒入牌面b,ab兩牌面完成交換
-  }//設定52張不同的排，牌先洗好，再依順序發牌，個別玩家手上的七張牌就不會出現重複
-  face1=faces[0];
-  face2=faces[1];
-  face3=faces[2];
-  face4=faces[3];
-  face5=faces[4];
-  face6=faces[5];
-  face7=faces[6];
-  face8=faces[7];
+  }
   //int(random(數字))表示隨機取小於該數字以下整數，所以是0...12，要加1
 } //洗牌的英文Shuffle,可以再新增一個void mousePressed(){}就可以按一下就洗牌
-void mouseDragged(){  //用滑鼠滾輪
-  myShuffle();
+int peopleNum=0;
+ //<>//
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == UP) {
+      peopleNum ++ ;
+    } else if (keyCode == DOWN) {
+      peopleNum--;
+    } 
+  }
+  if(peopleNum>9||peopleNum<0)
+    peopleNum=0;
 }
 String face1, face2, face3, face4, face5, face6, face7,face8;
 String object1, object2, object3, object4;
-int W=10;//兩張重疊卡片寬度差
+int W=peopleNumMax;//兩張重疊卡片寬度差
 void draw(){//使用函式，畫七張卡
-  drawPokerCard(  80,80,face1);
-  drawPokerCard( 250,80,face2);
-  drawPokerCard( 420,80,face3);
-  drawPokerCard( 590,80,face4);
-  drawPokerCard( 760,80,face5);
-  drawPokerCard( 930,80,face6);
-  drawPokerCard(1100,80,face7);
-  drawPokerCard(590,380,face8);
+  int x=150,y=80;
+  for(int i=0;i<5;i++)
+    drawPokerCard(  x+=150,y,people[peopleNum][i][0]);
  }//牌面：黑桃Spade,紅心Heart,方塊Diamond,梅花Club
 void drawPokerCard(int x, int y, String face){
   //外掛drawPokerCard程式，設定參數值為字串string，字串放在牌面face上
